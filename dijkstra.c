@@ -94,19 +94,28 @@ void dijkstra(int **graph, int V, int src) {
 }
 
 int main() {
-    int V;
+    int V, E;
     printf("Enter number of vertices: ");
     scanf("%d", &V);
+    printf("Enter number of edges: ");
+    scanf("%d", &E);
 
-    // Dynamic allocation of 2D matrix
+    // Allocate memory for adjacency matrix
     int **graph = malloc(V * sizeof(int *));
-    for (int i = 0; i < V; i++)
+    for (int i = 0; i < V; i++) {
         graph[i] = malloc(V * sizeof(int));
-
-    printf("Enter the adjacency matrix (use %d for INF):\n", INF);
-    for (int i = 0; i < V; i++)
         for (int j = 0; j < V; j++)
-            scanf("%d", &graph[i][j]);
+            graph[i][j] = (i == j) ? 0 : INF; // 0 for self-loops, INF otherwise
+    }
+
+    printf("Enter edges as: from to weight (e.g., 0 1 4):\n");
+    for (int i = 0; i < E; i++) {
+        int u, v, w;
+        scanf("%d %d %d", &u, &v, &w);
+        graph[u][v] = w;
+        // If the graph is undirected, uncomment the following line:
+        // graph[v][u] = w;
+    }
 
     int src;
     printf("Enter source vertex (0 to %d): ", V - 1);

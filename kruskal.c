@@ -1,25 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INF 99999
 #define MAXV 100
 
 typedef struct {
     int u, v, weight;
 } Edge;
 
-void kruskal(int **graph, int V) {
-    Edge edges[MAXV * MAXV];
-    int edgeCount = 0;
-
-    // Step 1: Extract undirected edges (upper triangle only)
-    for (int i = 0; i < V; i++) {
-        for (int j = i + 1; j < V; j++) {
-            if (graph[i][j] != INF)
-                edges[edgeCount++] = (Edge){i, j, graph[i][j]};
-        }
-    }
-
+void kruskal(Edge *edges, int edgeCount, int V) {
     // Step 2: Sort edges by weight
     for (int i = 0; i < edgeCount - 1; i++) {
         for (int j = 0; j < edgeCount - i - 1; j++) {
@@ -73,26 +61,27 @@ void kruskal(int **graph, int V) {
 }
 
 int main() {
-    int V;
+    int V, E;
     printf("Enter number of vertices: ");
     scanf("%d", &V);
 
-    // Allocate adjacency matrix
-    int **graph = malloc(V * sizeof(int *));
-    for (int i = 0; i < V; i++)
-        graph[i] = malloc(V * sizeof(int));
+    printf("Enter number of edges: ");
+    scanf("%d", &E);
 
-    printf("Enter the adjacency matrix (use %d for INF):\n", INF);
-    for (int i = 0; i < V; i++)
-        for (int j = 0; j < V; j++)
-            scanf("%d", &graph[i][j]);
+    Edge *edges = malloc(E * sizeof(Edge));
 
-    kruskal(graph, V);
+    printf("Enter edges in the format: a b weight\n");
+    for (int i = 0; i < E; i++) {
+        char u, v;
+        int weight;
+        scanf(" %c %c %d", &u, &v, &weight);
+        edges[i].u = u - 'a'; // Convert character to integer index
+        edges[i].v = v - 'a'; // Convert character to integer index
+        edges[i].weight = weight;
+    }
 
-    // Free memory
-    for (int i = 0; i < V; i++)
-        free(graph[i]);
-    free(graph);
+    kruskal(edges, E, V);
 
+    free(edges);
     return 0;
 }
